@@ -3,6 +3,8 @@ pub mod http_calls;
 pub mod websocket;
 pub mod websocket_events;
 pub mod models;
+
+#[cfg(test)]
 pub mod secret;
 
 #[cfg(test)]
