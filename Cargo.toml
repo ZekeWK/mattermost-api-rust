@@ -1,5 +1,5 @@
 [package]
-name = "mattermost_rust_api"
+name = "mattermost_api_rust"
 version = "0.1.0"
 edition = "2021"
 
