@@ -17,13 +17,9 @@ impl MMHTTP {
         MMHTTP{token, url, client : Client::new(), _rate_limit : RateLimit{}}
     }
 
-    pub fn get_client(&self) -> Client {
-        self.client.clone()
-    }
-
     pub async fn request(&self, method : Method, endpoint : Endpoint, path_param : String, body : String) -> Result<String, Error> {
         Ok(
-        self.get_client().request(
+        self.client.request(
             method,
             self.url.clone() + endpoint.into() + &path_param
         )
@@ -111,5 +107,5 @@ pub struct ErrResp {
 #[async_trait]
 pub trait HTTPCall {
     type Response;
-    async fn call(&self, mmhttp : &MMHTTP) -> Result<Self::Response, Error>;
+    async fn call(self, mmhttp : &MMHTTP) -> Result<Self::Response, Error>;
 }

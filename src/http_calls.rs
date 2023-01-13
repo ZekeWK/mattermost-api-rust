@@ -16,8 +16,9 @@ macro_rules! impl_HTTP_call {
         impl HTTPCall for $c {
             type Response = $r;
             
-            async fn call(&self,  mmhttp : &MMHTTP) -> Result<Self::Response, Error> {
-                mmhttp.call(self, $m, $e, $p(&self)).await
+            async fn call(self,  mmhttp : &MMHTTP) -> Result<Self::Response, Error> {
+                let path_param = $p(&self);
+                mmhttp.call(self, $m, $e, path_param).await
             }
         }
     };

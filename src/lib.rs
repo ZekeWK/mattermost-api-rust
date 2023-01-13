@@ -12,7 +12,7 @@ mod tests {
     use std::future::ready;
 
     use futures_util::{future::select, FutureExt};
-    use tokio::{runtime::Runtime, sync::mpsc::channel};
+    use tokio::{runtime::Runtime, sync::mpsc::channel, spawn};
 
     use crate::{ http_calls::*, http::*, secret::*, websocket::{*, self}, websocket_events::WebSocketEvent};
     use serde_json::from_str;
@@ -133,5 +133,29 @@ mod tests {
 
             select(Box::pin(handler), Box::pin(recv_n)).await
         });
+    }
+
+    #[test]
+    fn multiple_http_request() {
+        let mmhttp = std::sync::Arc::new(MMHTTP::new(TOKEN.to_string(), URLHTTP.to_string()));
+
+        let rt = Runtime::new().unwrap();
+        rt.block_on( 
+            async {
+                let mut post_reactions = Vec::new();
+                for _ in 0..10 {
+                    let call = GetPostReactionsCall::new("dy7q4hz417f83qern8thkh1exh".to_string());
+                    let mmhttp = mmhttp.clone();
+                    post_reactions.push(spawn(async move {
+                            call.call(mmhttp.as_ref()).await
+                        }
+                    ));
+                }
+
+                for post_reaction in post_reactions {
+                    post_reaction.await.unwrap().unwrap();
+                }
+            }
+        );
     }
 }
