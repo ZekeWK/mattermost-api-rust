@@ -89,7 +89,7 @@ impl GetPostReactionsCall {
 
 // TODO - Make it not require an option
 #[derive(Deserialize, Debug)]
-pub struct GetPostReactionsResp ( #[serde(default)] Option<Vec<Reaction>> );
+pub struct GetPostReactionsResp ( #[serde(default)] pub Option<Vec<Reaction>> );
 
 impl_HTTP_call!(GetPostReactionsCall, GetPostReactionsResp, Method::GET, Endpoint::Posts, {|s : &GetPostReactionsCall| format!("/{}/reactions", s.post_id)});
 
@@ -122,6 +122,6 @@ pub struct ChannelMember {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct GetChannelMembersResp ( Option<Vec<ChannelMember>> );
+pub struct GetChannelMembersResp ( pub Option<Vec<ChannelMember>> );
 
 impl_HTTP_call!(GetChannelMembersCall, GetChannelMembersResp, Method::GET, Endpoint::Channels, {|s : &GetChannelMembersCall| format!("/{}/members", s.channel_id)});
